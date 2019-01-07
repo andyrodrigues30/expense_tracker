@@ -7,6 +7,7 @@ menuDisplayOptions = '''
 1) Display Expense Overview
 2) Add Expense
 3) Set Budget
+4) Exit
 
 Enter option number:\t
 '''
@@ -42,18 +43,25 @@ def menuOptions():
             elif menuOption == 3:
                 print("You have selected to set a budget.")
                 setBudget()
+            elif menuOption == 4:
+                print("Thanks for using the program. Bye!\n")
+                quit()
             else:
                 print("That is not a valid input. Try again:\t")
                 continue
 
 def checkSignIn(userName, userPass):
+    userNameSuccess = False
+    userPassSuccess = False
     with open ("user_data.csv", "r") as userDataFile:
         fileReader = csv.reader(userDataFile, delimiter=",")
         for line in fileReader:
             for i in line:
-                print(i)
                 if i == userName:
-                    print("You are successfully signed in.")
+                    userNameSuccess = True
+                if userNameSuccess and i == userPass:
+                    print("\n---------------------\nYou are successfully signed in.")
+                    userPassSuccess = True
                     userDataFile.close()
                     menuOptions()
         print("Sorry, that username and/or password is not recognised.")
@@ -87,12 +95,7 @@ def signInPass():
                 print("You have not entered anything. Try again.")
                 continue
             else:
-                print("end")
                 return userPass
-
-# def createAccount():
-#     while True:
-
 
 def createAccountName():
     # New Username
