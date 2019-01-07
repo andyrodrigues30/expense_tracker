@@ -26,7 +26,18 @@ def setBudget():
                 print("Thank you for your input. Your new budget of " + str(newBudget) + " has been set.")
                 break
 
-def menuOptions():
+def expenseOverview(userName):
+    with open ("user_exp_data.csv", "r") as expenseDataFile:
+        fileReader = csv.reader(expenseDataFile, delimiter=",")
+        for line in fileReader:
+            for i in line:
+                if i == "username":
+                    print(line)
+                if i == userName:
+                    print(line)
+    expenseDataFile.close
+
+def menuOptions(userName):
     while True:
         try:
             menuOption = int(input(menuDisplayOptions))
@@ -38,6 +49,7 @@ def menuOptions():
                 continue
             elif menuOption == 1:
                 print("You have selected to display expense overview.")
+                expenseOverview(userName)
             elif menuOption == 2:
                 print("You have selected to add an expense.")
             elif menuOption == 3:
@@ -54,16 +66,16 @@ def checkSignIn(userName, userPass):
     userNameSuccess = False
     userPassSuccess = False
     with open ("user_data.csv", "r") as userDataFile:
-        fileReader = csv.reader(userDataFile, delimiter=",")
+        fileReader = csv.reader(userDataFile, lineterminator="")
         for line in fileReader:
             for i in line:
                 if i == userName:
                     userNameSuccess = True
                 if userNameSuccess and i == userPass:
-                    print("\n---------------------\nYou are successfully signed in.")
+                    print("\n--------------------------------\nYou are successfully signed in.")
                     userPassSuccess = True
                     userDataFile.close()
-                    menuOptions()
+                    menuOptions(userName)
         print("Sorry, that username and/or password is not recognised.")
     userDataFile.close()
 
@@ -97,6 +109,17 @@ def signInPass():
             else:
                 return userPass
 
+def storeNewAccount(addNewUser):
+    with open("user_data.csv", "a") as writeFile:#opens the csv file
+        writer = csv.writer(writeFile, lineterminator="")
+        writer = csv.writer(writeFile, lineterminator="")
+        #writes a each row in the csv file and at the end of the row create a new line 
+        writer.writerows("\n")
+        #writes the list created to the csv file as a new row
+        writer.writerow(addNewUser)
+        print("Your account has been added. For security reasons, please sign in again.")
+    writeFile.close
+
 def createAccountName():
     # New Username
         while True:
@@ -123,7 +146,6 @@ def createAccountPass():
                 print("You have not entered anything. Try again.")
                 continue
             else:
-                print("end")
                 return userPass
 
 
@@ -149,7 +171,8 @@ def beginProgram():
                     print("You do not have an account. Please create one to continue.")
                     userName = createAccountName()
                     userPass = createAccountPass()
-                    checkSignIn(userName, userPass)
+                    addNewUser = [userName, userPass]
+                    storeNewAccount(addNewUser)
 
 
 # MAIN CODE
