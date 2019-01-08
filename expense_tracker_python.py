@@ -12,6 +12,18 @@ menuDisplayOptions = '''
 Enter option number:\t
 '''
 
+categories = '''
+    1) Utilitys
+    2) Housing
+    3) Food and Drink
+    4) Transportation
+    5) Insurance
+    6) Leisure
+    7) Education
+    8) Personal
+    9) Medical
+'''
+
 def setBudget():
     while True:
         try:
@@ -25,6 +37,101 @@ def setBudget():
             else:
                 print("Thank you for your input. Your new budget of " + str(newBudget) + " has been set.")
                 break
+
+def getExpenseCategory(userName):
+    while True:
+        try:
+            expenseCategory = int(input(categories + "Select category from the list (enter number):\t"))
+        except ValueError:
+            print("That is not a valid input. Try again:\t")
+        else:
+            if expenseCategory == "":
+                print("You have not entered anything. Try again: £")
+                continue
+            elif expenseCategory == 1:
+                expenseCategory = "utilitys"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            elif expenseCategory == 2:
+                expenseCategory = "housing"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            elif expenseCategory == 3:
+                expenseCategory = "food and drink"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            elif expenseCategory == 4:
+                expenseCategory = "transportation"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            elif expenseCategory == 5:
+                expenseCategory = "insurance"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            elif expenseCategory == 6:
+                expenseCategory = "leisure"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            elif expenseCategory == 7:
+                expenseCategory = "education"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            elif expenseCategory == 8:
+                expenseCategory = "personal"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            elif expenseCategory == 9:
+                expenseCategory = "medical"
+                newExpense = [userName, expenseCategory]
+                return newExpense
+            else:
+                print("That is not a valid input. Try again:\t")
+                continue
+
+def getExpenseItem(newExpense):
+    while True:
+        try:
+            expenseItem = input("Enter item of expense:\t")
+        except ValueError:
+            print("That is not a valid input. Try again:\t")
+        else:
+            if expenseItem == "":
+                print("You have not entered anything. Try again: £")
+                continue
+            else:
+                newExpense.append(expenseItem)
+                return newExpense
+
+def getExpenseCost(newExpense):
+    while True:
+        try:
+            expenseCost = float(input("Enter cost of item: £"))
+        except ValueError:
+            print("That is not a valid input. Try again:\t")
+        else:
+            if expenseCost == "":
+                print("You have not entered anything. Try again: £")
+                continue
+            else:
+                newExpense.append(expenseCost)
+                return newExpense
+
+def getExpenseDate(newExpense):
+    ###expenseData = below
+    expenseDate = datetime.datetime.now()
+    expenseDate = expenseDate.strftime("%x")
+    newExpense.append(expenseDate)
+    return newExpense
+
+def addExpense(newExpense):
+    with open("user_exp_data.csv", "a") as expenseDataFile:#opens the csv file
+        writer = csv.writer(expenseDataFile, lineterminator="")
+        #writes a each row in the csv file and at the end of the row create a new line 
+        writer.writerows("\n")
+        #writes the list created to the csv file as a new row
+        writer.writerow(newExpense)
+        print("Your expense has been added. Thank you. next")
+    expenseDataFile.close
 
 def expenseOverview(userName):
     with open ("user_exp_data.csv", "r") as expenseDataFile:
@@ -45,13 +152,18 @@ def menuOptions(userName):
             print("That is not a valid input. Try again:\t")
         else:
             if menuOption == "":
-                print("You have not entered anythin. Try again: £")
+                print("You have not entered anything. Try again: £")
                 continue
             elif menuOption == 1:
                 print("You have selected to display expense overview.")
                 expenseOverview(userName)
             elif menuOption == 2:
                 print("You have selected to add an expense.")
+                newExpense = getExpenseCategory(userName)
+                newExpense = getExpenseItem(newExpense)
+                newExpense = getExpenseCost(newExpense)
+                newExpense = getExpenseDate(newExpense)
+                addExpense(newExpense)
             elif menuOption == 3:
                 print("You have selected to set a budget.")
                 setBudget()
@@ -111,7 +223,6 @@ def signInPass():
 
 def storeNewAccount(addNewUser):
     with open("user_data.csv", "a") as writeFile:#opens the csv file
-        writer = csv.writer(writeFile, lineterminator="")
         writer = csv.writer(writeFile, lineterminator="")
         #writes a each row in the csv file and at the end of the row create a new line 
         writer.writerows("\n")
