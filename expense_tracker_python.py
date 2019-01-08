@@ -3,6 +3,7 @@ import sys
 import datetime
 import csv
 
+# menu options
 menuDisplayOptions = '''
 1) Display Expense Overview
 2) Add Expense
@@ -12,6 +13,7 @@ menuDisplayOptions = '''
 Enter option number:\t
 '''
 
+# expense categories
 categories = '''
     1) Utilitys
     2) Housing
@@ -23,7 +25,7 @@ categories = '''
     8) Personal
     9) Medical
 '''
-
+# set budget function
 def setBudget():
     while True:
         try:
@@ -38,6 +40,7 @@ def setBudget():
                 print("Thank you for your input. Your new budget of " + str(newBudget) + " has been set.")
                 break
 
+# choose category to enter into file
 def getExpenseCategory(userName):
     while True:
         try:
@@ -88,6 +91,7 @@ def getExpenseCategory(userName):
                 print("That is not a valid input. Try again:\t")
                 continue
 
+# enter item to add to file
 def getExpenseItem(newExpense):
     while True:
         try:
@@ -102,6 +106,7 @@ def getExpenseItem(newExpense):
                 newExpense.append(expenseItem)
                 return newExpense
 
+# enter cost of item to add to file
 def getExpenseCost(newExpense):
     while True:
         try:
@@ -116,10 +121,11 @@ def getExpenseCost(newExpense):
                 newExpense.append(expenseCost)
                 return newExpense
 
+# add date to save to file
 def getExpenseDate(newExpense):
     ###expenseData = below
-    expenseDate = datetime.datetime.now()
-    expenseDate = expenseDate.strftime("%x")
+    expenseDate = datetime.datetime.now()# current datetime
+    expenseDate = expenseDate.strftime("%x")# take of the time, only have the date stored
     newExpense.append(expenseDate)
     return newExpense
 
@@ -139,25 +145,32 @@ def expenseOverview(userName):
         for line in fileReader:
             for i in line:
                 if i == "username":
+                    # output table header
                     print(line)
                 if i == userName:
+                    # output all data in each line
                     print(line)
     expenseDataFile.close
 
+# check menu option that is entered
 def menuOptions(userName):
     while True:
         try:
             menuOption = int(input(menuDisplayOptions))
         except ValueError:
+            # check value error
             print("That is not a valid input. Try again:\t")
         else:
             if menuOption == "":
+                # nothing entered
                 print("You have not entered anything. Try again: £")
                 continue
             elif menuOption == 1:
+                # user selected to se an overview of the expense
                 print("You have selected to display expense overview.")
                 expenseOverview(userName)
             elif menuOption == 2:
+                # add an expense to the file
                 print("You have selected to add an expense.")
                 newExpense = getExpenseCategory(userName)
                 newExpense = getExpenseItem(newExpense)
@@ -165,15 +178,18 @@ def menuOptions(userName):
                 newExpense = getExpenseDate(newExpense)
                 addExpense(newExpense)
             elif menuOption == 3:
+                #create a new  budget
                 print("You have selected to set a budget.")
                 setBudget()
             elif menuOption == 4:
+                #exit the program completely
                 print("Thanks for using the program. Bye!\n")
                 quit()
             else:
                 print("That is not a valid input. Try again:\t")
                 continue
 
+# check username and password in database
 def checkSignIn(userName, userPass):
     userNameSuccess = False
     userPassSuccess = False
@@ -191,6 +207,7 @@ def checkSignIn(userName, userPass):
         print("Sorry, that username and/or password is not recognised.")
     userDataFile.close()
 
+# allow user to enter username
 def signInUser():
     # Username
     while True:
@@ -205,7 +222,8 @@ def signInUser():
                 continue
             else:
                 return userName
-                
+
+# allow user to enter password        
 def signInPass():
     while True:
         # Password
@@ -221,6 +239,7 @@ def signInPass():
             else:
                 return userPass
 
+# store new user account details
 def storeNewAccount(addNewUser):
     with open("user_data.csv", "a") as writeFile:#opens the csv file
         writer = csv.writer(writeFile, lineterminator="")
@@ -231,6 +250,7 @@ def storeNewAccount(addNewUser):
         print("Your account has been added. For security reasons, please sign in again.")
     writeFile.close
 
+# create new user account name
 def createAccountName():
     # New Username
         while True:
@@ -245,6 +265,7 @@ def createAccountName():
                 else:
                     return userName
 
+# create user account password
 def createAccountPass():
     while True:
         try:
@@ -259,7 +280,7 @@ def createAccountPass():
             else:
                 return userPass
 
-
+# begin program function
 def beginProgram():
     while True:
         try:
