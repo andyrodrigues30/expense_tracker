@@ -25,6 +25,18 @@ categories = '''
     8) Personal
     9) Medical
 '''
+
+# check budget
+def checkBudget(newBudget):
+    with open("user_exp_data.csv", "r") as expenseDataFile:
+        totalExpense = 0
+        for i in expenseDataFile:
+            totalExpense = totalExpense + float(row[4])
+        if totalExpense > newBudget:
+            print("You have gone over budget by " + str(totalExpense - newBudget) + ".")
+        else:
+            print("You are" + str(totalExpense - newBudget) +"within the budget. Congrats!")
+
 # set budget function
 def setBudget():
     while True:
@@ -38,7 +50,7 @@ def setBudget():
                 continue
             else:
                 print("Thank you for your input. Your new budget of " + str(newBudget) + " has been set.")
-                break
+                return newBudget
 
 # choose category to enter into file
 def getExpenseCategory(userName):
@@ -139,21 +151,22 @@ def addExpense(newExpense):
         print("Your expense has been added. Thank you. next")
     expenseDataFile.close
 
-def expenseOverview(userName):
+def expenseOverview(userName, newbudget):
+    checkBudget(newBudget)
     with open ("user_exp_data.csv", "r") as expenseDataFile:
         fileReader = csv.reader(expenseDataFile, delimiter=",")
         for line in fileReader:
             for i in line:
                 if i == "username":
                     # output table header
-                    print(line)
+                    print('{:<20}{:<20}{:<20}{:<20}{:<20}'.format(*line))
                 if i == userName:
                     # output all data in each line
-                    print(line)
+                    print('{:<20}{:<20}{:<20}{:<20}{:<20}'.format(*line))
     expenseDataFile.close
 
 # check menu option that is entered
-def menuOptions(userName):
+def menuOptions(userName, newbudget):
     while True:
         try:
             menuOption = int(input(menuDisplayOptions))
@@ -168,7 +181,8 @@ def menuOptions(userName):
             elif menuOption == 1:
                 # user selected to se an overview of the expense
                 print("You have selected to display expense overview.")
-                expenseOverview(userName)
+                expenseOverview(userName,newbudget)
+                # , newbudget
             elif menuOption == 2:
                 # add an expense to the file
                 print("You have selected to add an expense.")
@@ -180,7 +194,7 @@ def menuOptions(userName):
             elif menuOption == 3:
                 #create a new  budget
                 print("You have selected to set a budget.")
-                setBudget()
+                newBudget = setBudget()
             elif menuOption == 4:
                 #exit the program completely
                 print("Thanks for using the program. Bye!\n")
@@ -203,7 +217,7 @@ def checkSignIn(userName, userPass):
                     print("\n--------------------------------\nYou are successfully signed in.")
                     userPassSuccess = True
                     userDataFile.close()
-                    menuOptions(userName)
+                    menuOptions(userName,newbudget)
         print("Sorry, that username and/or password is not recognised.")
     userDataFile.close()
 
