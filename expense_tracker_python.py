@@ -5,6 +5,7 @@ import csv
 
 # menu options
 menuDisplayOptions = '''
+================================
 1) Display Expense Overview
 2) Add Expense
 3) Set Budget
@@ -31,26 +32,29 @@ def checkBudget(newBudget):
     with open("user_exp_data.csv", "r") as expenseDataFile:
         totalExpense = 0
         for i in expenseDataFile:
-            totalExpense = totalExpense + float(row[4])
+            reader = csv.reader(expenseDataFile, lineterminator="")
+            for row in reader:
+                totalExpense = totalExpense + float(row[3])
+        print("\nThe current budget is £" + str(newBudget) + ".")
         if totalExpense > newBudget:
-            print("You have gone over budget by " + str(totalExpense - newBudget) + ".")
+            print("You have gone over budget by £" + str(totalExpense - newBudget) + ".\n")
         else:
-            print("You are" + str(totalExpense - newBudget) +"within the budget. Congrats!")
+            print("You are £" + str(totalExpense - newBudget) +" within the budget. Congrats!\n")
 
 # set budget function
-# def setBudget():
-#     while True:
-#         try:
-#             newBudget = float(input("Enter Budget: £"))
-#         except ValueError:
-#             print("That is not a valid input. Try again: £")
-#         else:
-#             if newBudget == "":
-#                 print("You have not entered anythin. Try again: £")
-#                 continue
-#             else:
-#                 print("Thank you for your input. Your new budget of " + str(newBudget) + " has been set.")
-#                 return newBudget
+def setBudget(newBudget):
+    while True:
+        try:
+            newBudget = float(input("Enter Budget: £"))
+        except ValueError:
+            print("That is not a valid input. Try again: £")
+        else:
+            if newBudget == "":
+                print("You have not entered anythin. Try again: £")
+                continue
+            else:
+                print("Thank you for your input. Your new budget of " + str(newBudget) + " has been set.")
+                return newBudget
 
 # choose category to enter into file
 def getExpenseCategory(userName):
@@ -151,9 +155,8 @@ def addExpense(newExpense):
         print("Your expense has been added. Thank you. next")
     expenseDataFile.close
 
-def expenseOverview(userName):
-    # , newbudget
-    #checkBudget(newBudget)
+def expenseOverview(userName, newBudget):
+    checkBudget(newBudget)
     with open ("user_exp_data.csv", "r") as expenseDataFile:
         fileReader = csv.reader(expenseDataFile, delimiter=",")
         for line in fileReader:
@@ -167,7 +170,7 @@ def expenseOverview(userName):
     expenseDataFile.close
 
 # check menu option that is entered
-def menuOptions(userName):
+def menuOptions(userName, newBudget):
     while True:
         try:
             menuOption = int(input(menuDisplayOptions))
@@ -182,8 +185,7 @@ def menuOptions(userName):
             elif menuOption == 1:
                 # user selected to se an overview of the expense
                 print("You have selected to display expense overview.")
-                expenseOverview(userName)
-                # , newbudget
+                expenseOverview(userName, newBudget)
             elif menuOption == 2:
                 # add an expense to the file
                 print("You have selected to add an expense.")
@@ -195,7 +197,7 @@ def menuOptions(userName):
             elif menuOption == 3:
                 #create a new  budget
                 print("You have selected to set a budget.")
-                newBudget = setBudget()
+                newBudget = setBudget(newBudget)
             elif menuOption == 4:
                 #exit the program completely
                 print("Thanks for using the program. Bye!\n")
@@ -205,7 +207,7 @@ def menuOptions(userName):
                 continue
 
 # check username and password in database
-def checkSignIn(userName, userPass):
+def checkSignIn(userName, userPass, newBudget):
     userNameSuccess = False
     userPassSuccess = False
     with open ("user_data.csv", "r") as userDataFile:
@@ -218,7 +220,7 @@ def checkSignIn(userName, userPass):
                     print("\n--------------------------------\nYou are successfully signed in.")
                     userPassSuccess = True
                     userDataFile.close()
-                    menuOptions(userName)
+                    menuOptions(userName, newBudget)
         print("Sorry, that username and/or password is not recognised.")
     userDataFile.close()
 
@@ -297,6 +299,7 @@ def createAccountPass():
 
 # begin program function
 def beginProgram():
+    newBudget = 0
     while True:
         try:
             haveAccount = input("Do you have an account? (y/n)\t")
@@ -312,7 +315,7 @@ def beginProgram():
                     haveAccount = "y"
                     userName = signInUser()
                     userPass = signInPass()
-                    checkSignIn(userName, userPass)
+                    checkSignIn(userName, userPass, newBudget)
                 else:
                     haveAccount = "n"
                     print("You do not have an account. Please create one to continue.")
