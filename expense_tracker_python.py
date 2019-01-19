@@ -1,5 +1,4 @@
 # IMPORTS
-import sys
 import datetime
 import csv
 
