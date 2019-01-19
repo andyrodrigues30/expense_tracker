@@ -1,5 +1,4 @@
 # IMPORTS
-import sys
 import datetime
 import csv
 
@@ -39,7 +38,8 @@ def checkBudget(newBudget):
         if totalExpense > newBudget:
             print("You have gone over budget by £" + str(totalExpense - newBudget) + ".\n")
         else:
-            print("You are £" + str(totalExpense - newBudget) +" within the budget. Congrats!\n")
+            amountLeft = round(((totalExpense - newBudget) * (-1)),2)
+            print("You are £" + str(amountLeft) +" within the budget. Congrats!\n")
 
 # set budget function
 def setBudget(newBudget):
